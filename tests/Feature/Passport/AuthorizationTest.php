@@ -14,7 +14,19 @@ use Illuminate\Support\Str;
 /**
  * @see https://laravel.com/docs/11.x/passport#issuing-access-tokens
  * @see https://laravel.com/docs/11.x/passport#code-grant-pkce
+ *
+ * 
+ * ## Authorization Screen
+ * 
+ * The prompt parameter may be used to specify the authentication behavior of the Passport application.
+ * 
+ * - If the prompt value is none, Passport will always throw an authentication error if the user is not already authenticated with the Passport application. 
+ * - If the value is consent, Passport will always display the authorization approval screen, even if all scopes were previously granted to the consuming application. 
+ * - When the value is login, the Passport application will always prompt the user to re-login to the application, even if they already have an existing session.
+ * 
+ * If no prompt value is provided, the user will be prompted for authorization only if they have not previously authorized access to the consuming application for the requested scopes.
  */
+		
 class AuthorizationTest extends TestCase
 {
 	protected ClientRepository $clients;
@@ -26,7 +38,7 @@ class AuthorizationTest extends TestCase
         parent::setUp();
 
 		Passport::$scopes = [
-			'sample-scope' => 'Place orders',
+			'sample-scope' => 'Sample Scope',
 		];
 
 		$this->clients = app(ClientRepository::class);
@@ -46,15 +58,6 @@ class AuthorizationTest extends TestCase
 		);
 		
 		// Get the Authorization Screen
-		/**
-		 * The prompt parameter may be used to specify the authentication behavior of the Passport application.
-		 * 
-		 * - If the prompt value is none, Passport will always throw an authentication error if the user is not already authenticated with the Passport application. 
-		 * - If the value is consent, Passport will always display the authorization approval screen, even if all scopes were previously granted to the consuming application. 
-		 * - When the value is login, the Passport application will always prompt the user to re-login to the application, even if they already have an existing session.
-		 * 
-		 * If no prompt value is provided, the user will be prompted for authorization only if they have not previously authorized access to the consuming application for the requested scopes.
-		 */
 		$response = $this
 			->followingRedirects()
 			->get(route('passport.authorizations.authorize',[

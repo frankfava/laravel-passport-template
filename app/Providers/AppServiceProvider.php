@@ -24,7 +24,9 @@ class AppServiceProvider extends ServiceProvider
     {
 		Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 		Passport::useClientModel(Client::class);
-		Passport::tokensCan([]);
+		Passport::tokensCan([
+			'sample-scope' => 'Sample Scope',
+		]);
         Vite::prefetch(concurrency: 3);
     }
 }
